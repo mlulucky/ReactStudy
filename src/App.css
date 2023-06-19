@@ -7,6 +7,25 @@
   pointer-events: none;
 }
 
+.black_nav {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  text-align: left;
+}
+
+
+ul {
+  padding: 0;
+  padding: 0 20px;
+}
+
+.list {
+  list-style: none;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -36,3 +55,4 @@
     transform: rotate(360deg);
   }
 }
+

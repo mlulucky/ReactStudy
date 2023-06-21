@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 function App() {
   let title = "개발 Blog";
-  let [글제목, 글제목변경] = useState(["맛집탐방", "일본여행", "개발일지"], "변경함수");
+  let [글제목, 글제목변경] = useState(["맛집탐방", "일본여행", "개발일지", "리액트공부"]);
   // 좋아요 누르면 1씩 증가하기 => 바뀌는 값 state 로 저장
 
   // let [따봉, 따봉변경] = useState(0);
@@ -18,6 +18,11 @@ function App() {
   let [따봉, 따봉변경] = useState(따봉배열)
 
   let [modal, setModal] = useState(false);
+
+  let [인덱스, 인덱스변경] = useState(0);
+
+  let [입력값, 입력값변경] = useState('');
+
   // let modal = false // 모달창의 상태를 state 로 저장
 
   // let 따봉 = 0;
@@ -54,6 +59,8 @@ function App() {
     글제목변경(새로운배열); // == 글제목
   }
 
+
+
   return (
     <div className="App">
       <div className="black_nav">
@@ -67,10 +74,17 @@ function App() {
             return (
               // 반복문으로 생성한 html 에는 key= {i} 독자적인 속성을 추가하기
               <li className="list" key={i}>
-                <h3> {글제목[i]}
+                <h3 onClick={(e) => { 
+                  setModal(!modal) 
+                  console.log(e.target)
+                  // console.log(글제목[i]);
+                  인덱스변경(i)
+                  
+                  }}> {글제목[i]}
                   <span
                     style={{ cursor: 'pointer' }}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       // 따봉변경(변경된 따봉배열) 
                       // 따봉변경([1,0,0])
                       // array 자료형인 경우 복사 // 단순 대입은 같은 주소를 참조하므로 a == b true 가 나온다.
@@ -81,14 +95,13 @@ function App() {
                       // b[1] = 3
                       // console.log(a) // [1,3,3]
                       // console.log(b) // [1,3,3] 
-                      // console.log(a == b) // true 같은 배열을 참조하는가
-                      
+                      // console.log(a == b) // true 같은 메모리를 참조하는가
+
                       // 🌹 잘못된 예시
                       // 따봉[i] ++;
                       // 따봉변경(따봉); // 따봉 = 따봉변경(따봉) // 같은 따봉 을 참조하므로 데이터가 동시에 변경되므로. 실제 값은 바뀔지언정 변화가 없음 => 재렌더링 안된다.
+                      // 자료형은 참조메모리, 값이 모두 바껴야 기존 값과 다른 것! 화면이 재 렌더링 된다.
 
-
-                    
                       // ❤ 배열복사 1
                       // const new따봉 = [];
                       // for (let i = 0; i < 따봉.length; ++i) {
@@ -98,44 +111,79 @@ function App() {
                       // new따봉[i]++; // new따봉[i] += 1
                       // 따봉변경(new따봉)
 
-                      
                       // ❤ 배열복사 2
-                      const newArr = [ ...따봉 ];  // [0, 0, 0]
+                      const newArr = [...따봉];  // [0, 0, 0]
                       newArr[i]++;
                       따봉변경(newArr); // 따봉 = 따봉변경(newArr) // 따봉이 새로운 new따봉 으로 바뀐 것! => 재렌더링 
 
-                    }}>👍</span>
 
+                    }}>👍</span>
 
                   {따봉[i]}
                 </h3>
                 <p>6월 19일</p>
+
+                <button onClick={ ()=>{    }}>삭제</button>
+
               </li>
+
             )
           })
         }
 
       </ul>
+      
+      <div>
+        <input onChange={ (e)=>{ 
+          // console.log(e.target.value);  
+          입력값변경(e.target.value) // setState 함수는 늦게처리 된다 (비동기 처리) 
+          console.log(입력값); 
+          } }/>
+        <button 
+        onClick={ ()=>{ 
+          let new글제목 = [... 글제목]
+          // new글제목.push(입력값);
+          new글제목.unshift(입력값);
+          글제목변경(new글제목)
+          console.log(new글제목)
 
+          // 글제목을 추가하면 글목록이 추가됨(글제목배열 개수만큼 html 반복되서)
+        } }>글발행</button> 
+      </div>
       {
         // html 안에서 조건식은 삼항연산자를 사용
         // 빈 html 은 null 을 사용
-        modal == true ? <Modal /> : null
+        // <Modal color="skyblue"> 일반 문자전송은 중괄호 없이 사용가능
+        modal == true ? <Modal color={"skyblue"} 제목바꾸기={제목바꾸기} 글제목={ 글제목 }  인덱스={인덱스}/> : null
+
       }
+
 
     </div>
 
   );
-}
+} // function App 컴포넌트 
 
-function Modal() {
+function Modal(props) {
+  // let [인덱스, 인덱스변경] = useState(0); 
+  // state 를 App 에서 선언안하고, 자식 Modal 에서 선언해서 사용해도 됨 
+  // <h2> { props.글제목[인덱스] } </h2>   // props.인덱스가 아니고 그냥 인덱스 사용 가능
+  // 근데 state 가 Modal, App 에서 필요하면 App 컴포넌트 에서 만들어야 한다.
+  // 🍒 state 만드는 곳은 state 사용하는 컴포넌트 중 최상위 컴포넌트
+
   return (
-    <div className="modal">
-      <h2>제목</h2>
+    <div className="modal" style={{ background: props.color }}>   
+      <h2> { props.글제목[props.인덱스] } </h2>
       <p>내용</p>
       <p>상세내용</p>
+      <button onClick={props.제목바꾸기}>제목변경</button>
     </div>
   )
+
+  // function App 에서 선언된 state 글제목 변수는 function Modal 에서는 사용 못한다 왜? 자바스크립트는 함수안에서 선언된 변수는 함수밖에서는 사용못해서.
+  // 해결방법은 function App 컴포넌트안에 <Modal /> 컴포넌트는 자식컴포넌트이므로. 부모컴포넌트 App 에서 선언된 state 를 자식 컴포넌트 Modal 로 전송이 가능하다.
+  // 방법은 자식 컴포넌트 태그에 state 를 변수로 속성을 추가하고  그 자식 컴포넌트를 만든 함수 function Modal 의 파라미터로 props 속성을 추가하여서 props.state 변수명 을 사용한다.
+
 }
 
 function Subject() {

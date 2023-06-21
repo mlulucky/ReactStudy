@@ -59,6 +59,19 @@ function App() {
     글제목변경(새로운배열); // == 글제목
   }
 
+  // 현재날짜
+  const date = ()=> {
+    const today = new Date();
+    const time = {
+      year : today.getFullYear(),
+      month : today.getMonth() + 1,
+      datee : today.getDate(),
+      hours : today.getHours(),
+      minute : today.getMinutes()
+    }
+    const timeString = `${time.year}.${time.month}.${time.datee}.${time.hours}:${time.minute}`;
+    return timeString 
+  }
 
 
   return (
@@ -112,7 +125,7 @@ function App() {
                       // 따봉변경(new따봉)
 
                       // ❤ 배열복사 2
-                      const newArr = [...따봉];  // [0, 0, 0]
+                      const newArr = [...따봉];  // [0, 0, 0] array, object 형태의 state 를 변경하고 싶으면 카피본을 먼저 만들기 !!
                       newArr[i]++;
                       따봉변경(newArr); // 따봉 = 따봉변경(newArr) // 따봉이 새로운 new따봉 으로 바뀐 것! => 재렌더링 
 
@@ -121,9 +134,19 @@ function App() {
 
                   {따봉[i]}
                 </h3>
-                <p>6월 19일</p>
+                
+                <p>
+                  {
+                    date()
 
-                <button onClick={ ()=>{    }}>삭제</button>
+                  }
+                </p>
+                <button onClick={ ()=>{ 
+                    const new글제목 = [...글제목]; // array, object 형태의 state 를 변경하고 싶으면 카피본을 먼저 만들기 !!
+                    new글제목.splice(i,1);
+                    console.log(new글제목);
+                    글제목변경(new글제목);
+                   }}>삭제</button>
 
               </li>
 
@@ -136,18 +159,26 @@ function App() {
       <div>
         <input onChange={ (e)=>{ 
           // console.log(e.target.value);  
-          입력값변경(e.target.value) // setState 함수는 늦게처리 된다 (비동기 처리) 
+          입력값변경(e.target.value) // 입력값이 e.target.value 로 바뀐다. // setState 함수는 늦게처리 된다 (비동기 처리) 
           console.log(입력값); 
           } }/>
         <button 
-        onClick={ ()=>{ 
-          let new글제목 = [... 글제목]
-          // new글제목.push(입력값);
-          new글제목.unshift(입력값);
-          글제목변경(new글제목)
-          console.log(new글제목)
-
-          // 글제목을 추가하면 글목록이 추가됨(글제목배열 개수만큼 html 반복되서)
+        onClick={ (e)=>{ 
+          e.preventDefault();
+          if(입력값.trim()=="") { // 공백을 제거한 값이 "" 빈값이면 
+            alert("값을 입력해주세요");
+          } else {
+            let new글제목 = [... 글제목] // array, object 형태의 state 를 변경하고 싶으면 카피본을 먼저 만들기 !!
+            // new글제목.push(입력값);// 배열 뒤에 요소 추가
+            new글제목.unshift(입력값); // 배열 앞에 요소 추가 // 입력값은 e.target.value
+            글제목변경(new글제목); // 글제목을 추가하면 글목록이 추가됨(글제목배열 개수만큼 html 반복되서)
+            
+            let new따봉 = [...따봉];
+            new따봉.unshift(0); // 글제목 추가시, 따봉개수도 추가하기
+            따봉변경(new따봉); // 따봉을 new따봉으로 바꾼 것
+          }
+            
+            
         } }>글발행</button> 
       </div>
       {

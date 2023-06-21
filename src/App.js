@@ -1,5 +1,5 @@
 /* eslint-disable  */
-
+import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { useState } from 'react';
@@ -79,7 +79,6 @@ function App() {
       <div className="black_nav">
         <h2> {title} </h2>
       </div>
-
       <ul>
 
         {
@@ -134,11 +133,9 @@ function App() {
 
                   {따봉[i]}
                 </h3>
-                
                 <p>
                   {
                     date()
-
                   }
                 </p>
                 <button onClick={ ()=>{ 
@@ -189,6 +186,7 @@ function App() {
 
       }
 
+      {/* <Componet 글제목={글제목} ></Componet> */}
 
     </div>
 
@@ -216,6 +214,32 @@ function Modal(props) {
   // 방법은 자식 컴포넌트 태그에 state 를 변수로 속성을 추가하고  그 자식 컴포넌트를 만든 함수 function Modal 의 파라미터로 props 속성을 추가하여서 props.state 변수명 을 사용한다.
 
 }
+
+
+// 리액트 클래스를 이용한 컴포넌트 만드는 법
+class Componet extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      name : "kim",
+      age : 20
+    }
+  }
+  render(){
+    return (
+      // state 변경은 setState
+      <div>
+        <p>
+          { this.props.글제목 }
+        </p>
+        안녕 {this.state.name}
+        <button onClick={()=>{ this.setState({ name : "moon" })}}>변경</button> 
+      </div>
+      
+    )
+  }
+}
+
 
 function Subject() {
   return (

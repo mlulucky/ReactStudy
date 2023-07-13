@@ -2,9 +2,26 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function App() {
+  useEffect(()=>{
+    ajax통신();
+  },[]);
+
+
+  async function ajax통신(){
+    try{
+      let 받아온데이터 = await axios.get("/hello");
+      console.log("ajax 받아온데이터", 받아온데이터);
+    }catch(e){
+      console.log("에러", e);
+    }
+  }
+
+
+
   let title = "개발 Blog";
   let [글제목, 글제목변경] = useState(["맛집탐방", "일본여행", "개발일지", "리액트공부"]);
   // 좋아요 누르면 1씩 증가하기 => 바뀌는 값 state 로 저장
